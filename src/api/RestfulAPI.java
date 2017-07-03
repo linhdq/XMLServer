@@ -59,7 +59,7 @@ public class RestfulAPI {
 			user = new User("", "", "", "", -1);
 		}
 		String xml = ConvertObjectToXML.convertUserModelToXml(user);
-		return Response.status(200).entity(xml).build();
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
 	
 	@POST
@@ -68,15 +68,21 @@ public class RestfulAPI {
 	public Response getAllAdmins(LoginModel model) {
 		//check login data in database
 		List<User> listUser = new ArrayList();
+		ResponseModel responseModel = new ResponseModel();
+		String xml ="";
 		if(dbContext.openConnection()){
 			User user = dbContext.checkLogin(model.getUsername(), model.getPassword());
 			if(user!=null &&user.getRole()==0){
 				listUser.addAll(dbContext.getAllAdmins());
+				xml = ConvertObjectToXML.convertListUserModelToXml(listUser);
+			}else{
+				responseModel.setStatus(false);
+				responseModel.setMessage("Bạn không có quyền truy cập chức năng này!");
+				xml = ConvertObjectToXML.convertResponseModelToXML(responseModel);
 			}
 			dbContext.closeConnection();
 		}
-		String xml = ConvertObjectToXML.convertListUserModelToXml(listUser);
-		return Response.status(200).entity(xml).build();
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
 	
 	@POST
@@ -85,15 +91,21 @@ public class RestfulAPI {
 	public Response getAllClients(LoginModel model) {
 		//check login data in database
 		List<User> listUser = new ArrayList();
+		ResponseModel responseModel = new ResponseModel();
+		String xml ="";
 		if(dbContext.openConnection()){
 			User user = dbContext.checkLogin(model.getUsername(), model.getPassword());
 			if(user!=null &&user.getRole()==1){
 				listUser.addAll(dbContext.getAllClients());
+				xml = ConvertObjectToXML.convertListUserModelToXml(listUser);
+			}else{
+				responseModel.setStatus(false);
+				responseModel.setMessage("Bạn không có quyền truy cập chức năng này!");
+				xml = ConvertObjectToXML.convertResponseModelToXML(responseModel);
 			}
 			dbContext.closeConnection();
 		}
-		String xml = ConvertObjectToXML.convertListUserModelToXml(listUser);
-		return Response.status(200).entity(xml).build();
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
 	
 	@POST
@@ -117,7 +129,7 @@ public class RestfulAPI {
 			dbContext.closeConnection();
 		}
 		String xml = ConvertObjectToXML.convertResponseModelToXML(responseModel);
-		return Response.status(200).entity(xml).build();
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
 	
 	@POST
@@ -141,7 +153,7 @@ public class RestfulAPI {
 			dbContext.closeConnection();
 		}
 		String xml = ConvertObjectToXML.convertResponseModelToXML(responseModel);
-		return Response.status(200).entity(xml).build();
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
 	
 	@POST
@@ -173,7 +185,7 @@ public class RestfulAPI {
 			dbContext.closeConnection();
 		}
 		String xml = ConvertObjectToXML.convertResponseModelToXML(responseModel);
-		return Response.status(200).entity(xml).build();
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
 	
 	@POST
@@ -205,7 +217,7 @@ public class RestfulAPI {
 			dbContext.closeConnection();
 		}
 		String xml = ConvertObjectToXML.convertResponseModelToXML(responseModel);
-		return Response.status(200).entity(xml).build();
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
 	
 	@POST
@@ -227,7 +239,51 @@ public class RestfulAPI {
 			}
 			dbContext.closeConnection();
 		}
-		return Response.status(200).entity(xml).build();
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
+	}
+	
+	@POST
+	@Path("/get/de/by_date")
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response getAllDataOfDeByDate(RequestDataModel model) {
+		List<DeModel> list = new ArrayList();
+		String xml ="";
+		if(dbContext.openConnection()){
+			User user = dbContext.checkUsernameIsExists(model.getUsername());
+			if(user!=null && user.getRole()==1){
+				list.addAll(dbContext.getAllDataOfDeByDate(model.getDate()));
+				xml = ConvertObjectToXML.convertListDeModelToXml(list);
+			}else{
+				ResponseModel resModel = new ResponseModel();
+				resModel.setStatus(false);
+				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
+				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
+			}
+			dbContext.closeConnection();
+		}
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
+	}
+	
+	@POST
+	@Path("/get/de/by_username")
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response getAllDataOfDeByUsername(RequestDataModel model) {
+		List<DeModel> list = new ArrayList();
+		String xml ="";
+		if(dbContext.openConnection()){
+			User user = dbContext.checkUsernameIsExists(model.getUsername());
+			if(user!=null && user.getRole()==2){
+				list.addAll(dbContext.getAllDataOfDeByUsername(model.getUsername()));
+				xml = ConvertObjectToXML.convertListDeModelToXml(list);
+			}else{
+				ResponseModel resModel = new ResponseModel();
+				resModel.setStatus(false);
+				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
+				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
+			}
+			dbContext.closeConnection();
+		}
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
 	
 	@POST
@@ -249,7 +305,51 @@ public class RestfulAPI {
 			}
 			dbContext.closeConnection();
 		}
-		return Response.status(200).entity(xml).build();
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
+	}
+	
+	@POST
+	@Path("/get/ba_cang/by_date")
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response getAllDataOfBaCangByDate(RequestDataModel model) {
+		List<BaCangModel> list = new ArrayList();
+		String xml ="";
+		if(dbContext.openConnection()){
+			User user = dbContext.checkUsernameIsExists(model.getUsername());
+			if(user!=null && user.getRole()==1){
+				list.addAll(dbContext.getAllDataOfBaCangByDate(model.getDate()));
+				xml = ConvertObjectToXML.convertListBaCangModelToXml(list);
+			}else{
+				ResponseModel resModel = new ResponseModel();
+				resModel.setStatus(false);
+				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
+				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
+			}
+			dbContext.closeConnection();
+		}
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
+	}
+	
+	@POST
+	@Path("/get/ba_cang/by_username")
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response getAllDataOfBaCangByUsername(RequestDataModel model) {
+		List<BaCangModel> list = new ArrayList();
+		String xml ="";
+		if(dbContext.openConnection()){
+			User user = dbContext.checkUsernameIsExists(model.getUsername());
+			if(user!=null && user.getRole()==2){
+				list.addAll(dbContext.getAllDataOfBaCangByUsername(model.getUsername()));
+				xml = ConvertObjectToXML.convertListBaCangModelToXml(list);
+			}else{
+				ResponseModel resModel = new ResponseModel();
+				resModel.setStatus(false);
+				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
+				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
+			}
+			dbContext.closeConnection();
+		}
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
 	
 	@POST
@@ -271,7 +371,51 @@ public class RestfulAPI {
 			}
 			dbContext.closeConnection();
 		}
-		return Response.status(200).entity(xml).build();
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
+	}
+	
+	@POST
+	@Path("/get/lo/by_date")
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response getAllDataOfLoByDate(RequestDataModel model) {
+		List<LoModel> list = new ArrayList();
+		String xml ="";
+		if(dbContext.openConnection()){
+			User user = dbContext.checkUsernameIsExists(model.getUsername());
+			if(user!=null && user.getRole()==1){
+				list.addAll(dbContext.getAllDataOfLoByDate(model.getDate()));
+				xml = ConvertObjectToXML.convertListLoModelToXml(list);
+			}else{
+				ResponseModel resModel = new ResponseModel();
+				resModel.setStatus(false);
+				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
+				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
+			}
+			dbContext.closeConnection();
+		}
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
+	}
+	
+	@POST
+	@Path("/get/lo/by_username")
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response getAllDataOfLoByUsername(RequestDataModel model) {
+		List<LoModel> list = new ArrayList();
+		String xml ="";
+		if(dbContext.openConnection()){
+			User user = dbContext.checkUsernameIsExists(model.getUsername());
+			if(user!=null && user.getRole()==2){
+				list.addAll(dbContext.getAllDataOfLoByUsername(model.getUsername()));
+				xml = ConvertObjectToXML.convertListLoModelToXml(list);
+			}else{
+				ResponseModel resModel = new ResponseModel();
+				resModel.setStatus(false);
+				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
+				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
+			}
+			dbContext.closeConnection();
+		}
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
 	
 	@POST
@@ -293,7 +437,51 @@ public class RestfulAPI {
 			}
 			dbContext.closeConnection();
 		}
-		return Response.status(200).entity(xml).build();
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
+	}
+	
+	@POST
+	@Path("/get/lo_xien_2/by_date")
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response getAllDataOfLoXien2ByDate(RequestDataModel model) {
+		List<LoXien2Model> list = new ArrayList();
+		String xml ="";
+		if(dbContext.openConnection()){
+			User user = dbContext.checkUsernameIsExists(model.getUsername());
+			if(user!=null && user.getRole()==1){
+				list.addAll(dbContext.getAllDataOfLoXien2ByDate(model.getDate()));
+				xml = ConvertObjectToXML.convertListLoXien2ModelToXml(list);
+			}else{
+				ResponseModel resModel = new ResponseModel();
+				resModel.setStatus(false);
+				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
+				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
+			}
+			dbContext.closeConnection();
+		}
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
+	}
+	
+	@POST
+	@Path("/get/lo_xien_2/by_username")
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response getAllDataOfLoXien2ByUsername(RequestDataModel model) {
+		List<LoXien2Model> list = new ArrayList();
+		String xml ="";
+		if(dbContext.openConnection()){
+			User user = dbContext.checkUsernameIsExists(model.getUsername());
+			if(user!=null && user.getRole()==2){
+				list.addAll(dbContext.getAllDataOfLoXien2ByUsername(model.getUsername()));
+				xml = ConvertObjectToXML.convertListLoXien2ModelToXml(list);
+			}else{
+				ResponseModel resModel = new ResponseModel();
+				resModel.setStatus(false);
+				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
+				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
+			}
+			dbContext.closeConnection();
+		}
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
 	
 	@POST
@@ -315,7 +503,51 @@ public class RestfulAPI {
 			}
 			dbContext.closeConnection();
 		}
-		return Response.status(200).entity(xml).build();
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
+	}
+	
+	@POST
+	@Path("/get/lo_xien_3/by_date")
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response getAllDataOfLoXien3ByDate(RequestDataModel model) {
+		List<LoXien3Model> list = new ArrayList();
+		String xml ="";
+		if(dbContext.openConnection()){
+			User user = dbContext.checkUsernameIsExists(model.getUsername());
+			if(user!=null && user.getRole()==1){
+				list.addAll(dbContext.getAllDataOfLoXien3ByDate(model.getDate()));
+				xml = ConvertObjectToXML.convertListLoXien3ModelToXml(list);
+			}else{
+				ResponseModel resModel = new ResponseModel();
+				resModel.setStatus(false);
+				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
+				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
+			}
+			dbContext.closeConnection();
+		}
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
+	}
+	
+	@POST
+	@Path("/get/lo_xien_3/by_username")
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response getAllDataOfLoXien3ByUsername(RequestDataModel model) {
+		List<LoXien3Model> list = new ArrayList();
+		String xml ="";
+		if(dbContext.openConnection()){
+			User user = dbContext.checkUsernameIsExists(model.getUsername());
+			if(user!=null && user.getRole()==2){
+				list.addAll(dbContext.getAllDataOfLoXien3ByUsername(model.getUsername()));
+				xml = ConvertObjectToXML.convertListLoXien3ModelToXml(list);
+			}else{
+				ResponseModel resModel = new ResponseModel();
+				resModel.setStatus(false);
+				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
+				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
+			}
+			dbContext.closeConnection();
+		}
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
 	
 	@POST
@@ -337,6 +569,50 @@ public class RestfulAPI {
 			}
 			dbContext.closeConnection();
 		}
-		return Response.status(200).entity(xml).build();
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
+	}
+	
+	@POST
+	@Path("/get/lo_xien_4/by_date")
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response getAllDataOfLoXien4ByDate(RequestDataModel model) {
+		List<LoXien4Model> list = new ArrayList();
+		String xml ="";
+		if(dbContext.openConnection()){
+			User user = dbContext.checkUsernameIsExists(model.getUsername());
+			if(user!=null && user.getRole()==1){
+				list.addAll(dbContext.getAllDataOfLoXien4ByDate(model.getDate()));
+				xml = ConvertObjectToXML.convertListLoXien4ModelToXml(list);
+			}else{
+				ResponseModel resModel = new ResponseModel();
+				resModel.setStatus(false);
+				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
+				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
+			}
+			dbContext.closeConnection();
+		}
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
+	}
+	
+	@POST
+	@Path("/get/lo_xien_4/by_username")
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response getAllDataOfLoXien4ByUsername(RequestDataModel model) {
+		List<LoXien4Model> list = new ArrayList();
+		String xml ="";
+		if(dbContext.openConnection()){
+			User user = dbContext.checkUsernameIsExists(model.getUsername());
+			if(user!=null && user.getRole()==2){
+				list.addAll(dbContext.getAllDataOfLoXien4ByUsername(model.getUsername()));
+				xml = ConvertObjectToXML.convertListLoXien4ModelToXml(list);
+			}else{
+				ResponseModel resModel = new ResponseModel();
+				resModel.setStatus(false);
+				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
+				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
+			}
+			dbContext.closeConnection();
+		}
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
 }
