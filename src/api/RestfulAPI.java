@@ -14,11 +14,19 @@ import javax.ws.rs.core.Response;
 import com.google.gson.Gson;
 
 import restful_api_model.CreateUserModel;
+import restful_api_model.DeleteRequest;
 import restful_api_model.LoginModel;
 import restful_api_model.LoginResponseModel;
+import restful_api_model.RequestDataModel;
 import restful_api_model.ResponseModel;
 import xml_util.ConvertObjectToXML;
 import database.DBContext;
+import model.BaCangModel;
+import model.DeModel;
+import model.LoModel;
+import model.LoXien2Model;
+import model.LoXien3Model;
+import model.LoXien4Model;
 import model.User;
 
 @Path("/api")
@@ -133,6 +141,202 @@ public class RestfulAPI {
 			dbContext.closeConnection();
 		}
 		String xml = ConvertObjectToXML.convertResponseModelToXML(responseModel);
+		return Response.status(200).entity(xml).build();
+	}
+	
+	@POST
+	@Path("/delete/admin")
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response deleteAdmin(DeleteRequest model) {
+		//check login data in database
+		ResponseModel responseModel =new ResponseModel();
+		if(dbContext.openConnection()){
+			User userRequest = dbContext.checkUsernameIsExists(model.getUsernameRequest());
+			if(userRequest!=null && userRequest.getRole()==0){
+				User userDelete = dbContext.checkUsernameIsExists(model.getUsernameDelete());
+				if(userDelete!=null && userDelete.getRole()==1){
+					if(dbContext.deleteUser(model.getUsernameDelete())){
+						responseModel.setStatus(true);
+						responseModel.setMessage("Tài khoản đã được xóa khỏi hệ thống!");
+					}else{
+						responseModel.setStatus(false);
+						responseModel.setMessage("Yêu cầu xóa tài khoản không thành công!");
+					}
+				}else{
+					responseModel.setStatus(false);
+					responseModel.setMessage("Bạn không có quyền xóa tài khoản này!");
+				}
+			}else{
+				responseModel.setStatus(false);
+				responseModel.setMessage("Bạn không có quyền xóa tài khoản này!");
+			}
+			dbContext.closeConnection();
+		}
+		String xml = ConvertObjectToXML.convertResponseModelToXML(responseModel);
+		return Response.status(200).entity(xml).build();
+	}
+	
+	@POST
+	@Path("/delete/client")
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response deleteClient(DeleteRequest model) {
+		//check login data in database
+		ResponseModel responseModel =new ResponseModel();
+		if(dbContext.openConnection()){
+			User userRequest = dbContext.checkUsernameIsExists(model.getUsernameRequest());
+			if(userRequest!=null && userRequest.getRole()==1){
+				User userDelete = dbContext.checkUsernameIsExists(model.getUsernameDelete());
+				if(userDelete!=null && userDelete.getRole()==2){
+					if(dbContext.deleteUser(model.getUsernameDelete())){
+						responseModel.setStatus(true);
+						responseModel.setMessage("Tài khoản đã được xóa khỏi hệ thống!");
+					}else{
+						responseModel.setStatus(false);
+						responseModel.setMessage("Yêu cầu xóa tài khoản không thành công!");
+					}
+				}else{
+					responseModel.setStatus(false);
+					responseModel.setMessage("Bạn không có quyền xóa tài khoản này!");
+				}
+			}else{
+				responseModel.setStatus(false);
+				responseModel.setMessage("Bạn không có quyền xóa tài khoản này!");
+			}
+			dbContext.closeConnection();
+		}
+		String xml = ConvertObjectToXML.convertResponseModelToXML(responseModel);
+		return Response.status(200).entity(xml).build();
+	}
+	
+	@POST
+	@Path("/get/de/all")
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response getAllDataOfDe(RequestDataModel model) {
+		List<DeModel> list = new ArrayList();
+		String xml ="";
+		if(dbContext.openConnection()){
+			User user = dbContext.checkUsernameIsExists(model.getUsername());
+			if(user!=null && user.getRole()==1){
+				list.addAll(dbContext.getAllDataOfDe());
+				xml = ConvertObjectToXML.convertListDeModelToXml(list);
+			}else{
+				ResponseModel resModel = new ResponseModel();
+				resModel.setStatus(false);
+				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
+				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
+			}
+			dbContext.closeConnection();
+		}
+		return Response.status(200).entity(xml).build();
+	}
+	
+	@POST
+	@Path("/get/ba_cang/all")
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response getAllDataOfBaCang(RequestDataModel model) {
+		List<BaCangModel> list = new ArrayList();
+		String xml ="";
+		if(dbContext.openConnection()){
+			User user = dbContext.checkUsernameIsExists(model.getUsername());
+			if(user!=null && user.getRole()==1){
+				list.addAll(dbContext.getAllDataOfBaCang());
+				xml = ConvertObjectToXML.convertListBaCangModelToXml(list);
+			}else{
+				ResponseModel resModel = new ResponseModel();
+				resModel.setStatus(false);
+				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
+				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
+			}
+			dbContext.closeConnection();
+		}
+		return Response.status(200).entity(xml).build();
+	}
+	
+	@POST
+	@Path("/get/lo/all")
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response getAllDataOfLo(RequestDataModel model) {
+		List<LoModel> list = new ArrayList();
+		String xml ="";
+		if(dbContext.openConnection()){
+			User user = dbContext.checkUsernameIsExists(model.getUsername());
+			if(user!=null && user.getRole()==1){
+				list.addAll(dbContext.getAllDataOfLo());
+				xml = ConvertObjectToXML.convertListLoModelToXml(list);
+			}else{
+				ResponseModel resModel = new ResponseModel();
+				resModel.setStatus(false);
+				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
+				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
+			}
+			dbContext.closeConnection();
+		}
+		return Response.status(200).entity(xml).build();
+	}
+	
+	@POST
+	@Path("/get/lo_xien_2/all")
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response getAllDataOfLoXien2(RequestDataModel model) {
+		List<LoXien2Model> list = new ArrayList();
+		String xml ="";
+		if(dbContext.openConnection()){
+			User user = dbContext.checkUsernameIsExists(model.getUsername());
+			if(user!=null && user.getRole()==1){
+				list.addAll(dbContext.getAllDataOfLoXien2());
+				xml = ConvertObjectToXML.convertListLoXien2ModelToXml(list);
+			}else{
+				ResponseModel resModel = new ResponseModel();
+				resModel.setStatus(false);
+				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
+				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
+			}
+			dbContext.closeConnection();
+		}
+		return Response.status(200).entity(xml).build();
+	}
+	
+	@POST
+	@Path("/get/lo_xien_3/all")
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response getAllDataOfLoXien3(RequestDataModel model) {
+		List<LoXien3Model> list = new ArrayList();
+		String xml ="";
+		if(dbContext.openConnection()){
+			User user = dbContext.checkUsernameIsExists(model.getUsername());
+			if(user!=null && user.getRole()==1){
+				list.addAll(dbContext.getAllDataOfLoXien3());
+				xml = ConvertObjectToXML.convertListLoXien3ModelToXml(list);
+			}else{
+				ResponseModel resModel = new ResponseModel();
+				resModel.setStatus(false);
+				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
+				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
+			}
+			dbContext.closeConnection();
+		}
+		return Response.status(200).entity(xml).build();
+	}
+	
+	@POST
+	@Path("/get/lo_xien_4/all")
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response getAllDataOfLoXien4(RequestDataModel model) {
+		List<LoXien4Model> list = new ArrayList();
+		String xml ="";
+		if(dbContext.openConnection()){
+			User user = dbContext.checkUsernameIsExists(model.getUsername());
+			if(user!=null && user.getRole()==1){
+				list.addAll(dbContext.getAllDataOfLoXien4());
+				xml = ConvertObjectToXML.convertListLoXien4ModelToXml(list);
+			}else{
+				ResponseModel resModel = new ResponseModel();
+				resModel.setStatus(false);
+				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
+				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
+			}
+			dbContext.closeConnection();
+		}
 		return Response.status(200).entity(xml).build();
 	}
 }

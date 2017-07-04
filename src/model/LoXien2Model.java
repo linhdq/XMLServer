@@ -1,5 +1,11 @@
 package model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name="lo_xien_2")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class LoXien2Model{
 	private String username;
 	private int number1;

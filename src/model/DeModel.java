@@ -1,5 +1,11 @@
 package model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name="de")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class DeModel{
 	private String username;
 	private int number;
