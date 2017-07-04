@@ -68,6 +68,9 @@ public class DBContext {
 		}
 	}
 	
+	/**
+	 * User table
+	 * */
 	
 	public User checkLogin(String username, String password){
 		String sql = "SELECT * FROM Users WHERE Username_= '"+username+"' AND Password_='"+password+"'";
@@ -195,6 +198,10 @@ public class DBContext {
 		}
 	}
 	
+	/**
+	 * De table
+	 * */
+	
 	public List<DeModel> getAllDataOfDe(){
 		String sql = "SELECT * FROM Table_De";
 		List<DeModel> listData = new ArrayList();
@@ -262,6 +269,10 @@ public class DBContext {
 		}
 		return listData;
 	}
+	
+	/**
+	 * Ba Cang table
+	 * */
 	
 	public List<BaCangModel> getAllDataOfBaCang(){
 		String sql = "SELECT * FROM Table_ba_cang";
@@ -331,6 +342,10 @@ public class DBContext {
 		return listData;
 	}
 	
+	/**
+	 * Lo table
+	 * */
+	
 	public List<LoModel> getAllDataOfLo(){
 		String sql = "SELECT * FROM Table_lo";
 		List<LoModel> listData = new ArrayList();
@@ -398,6 +413,10 @@ public class DBContext {
 		}
 		return listData;
 	}
+	
+	/**
+	 * Lo xien 2 table
+	 * */
 	
 	public List<LoXien2Model> getAllDataOfLoXien2(){
 		String sql = "SELECT * FROM Table_lo_xien_2";
@@ -469,6 +488,10 @@ public class DBContext {
 		}
 		return listData;
 	}
+	
+	/**
+	 * Lo Xien 3 table
+	 * */
 	
 	public List<LoXien3Model> getAllDataOfLoXien3(){
 		String sql = "SELECT * FROM Table_lo_xien_3";
@@ -543,6 +566,10 @@ public class DBContext {
 		}
 		return listData;
 	}
+	
+	/**
+	 * Lo Xien 4 table
+	 * */
 	
 	public List<LoXien4Model> getAllDataOfLoXien4(){
 		String sql = "SELECT * FROM Table_lo_xien_4";

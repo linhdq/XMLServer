@@ -78,3 +78,48 @@ INSERT INTO Table_De(Username_, Number_, Price_, Date_)
 VALUES('tribm', 26, 50000, '03/07/2017');
 INSERT INTO Table_De(Username_, Number_, Price_, Date_)
 VALUES('chinhnd', 27, 30000, '03/07/2017');
+
+INSERT INTO Table_ba_cang(Username_, Number_, Price_, Date_)
+VALUES('tungnt', 242, 20000, '03/07/2017');
+INSERT INTO Table_ba_cang(Username_, Number_, Price_, Date_)
+VALUES('truongtn', 253, 10000, '03/07/2017');
+INSERT INTO Table_ba_cang(Username_, Number_, Price_, Date_)
+VALUES('tribm', 264, 50000, '03/07/2017');
+INSERT INTO Table_ba_cang(Username_, Number_, Price_, Date_)
+VALUES('chinhnd', 275, 30000, '03/07/2017');
+
+INSERT INTO Table_lo(Username_, Number_, Point_, Date_)
+VALUES('tungnt', 24, 10, '03/07/2017');
+INSERT INTO Table_lo(Username_, Number_, Point_, Date_)
+VALUES('truongtn', 25, 20, '03/07/2017');
+INSERT INTO Table_lo(Username_, Number_, Point_, Date_)
+VALUES('tribm', 26, 30, '03/07/2017');
+INSERT INTO Table_lo(Username_, Number_, Point_, Date_)
+VALUES('chinhnd', 27, 40, '03/07/2017');
+
+INSERT INTO Table_lo_xien_2(Username_, Number_1, Number_2, Point_, Date_)
+VALUES('tungnt', 24, 25, 10, '03/07/2017');
+INSERT INTO Table_lo_xien_2(Username_, Number_1, Number_2, Point_, Date_)
+VALUES('truongtn', 25, 26, 20, '03/07/2017');
+INSERT INTO Table_lo_xien_2(Username_, Number_1, Number_2, Point_, Date_)
+VALUES('tribm', 26, 27, 30, '03/07/2017');
+INSERT INTO Table_lo_xien_2(Username_, Number_1, Number_2, Point_, Date_)
+VALUES('chinhnd', 27, 28, 40, '03/07/2017');
+
+INSERT INTO Table_lo_xien_3(Username_, Number_1, Number_2, Number_3, Point_, Date_)
+VALUES('tungnt', 24, 25, 26, 10, '03/07/2017');
+INSERT INTO Table_lo_xien_3(Username_, Number_1, Number_2, Number_3, Point_, Date_)
+VALUES('truongtn', 25, 26, 27, 20, '03/07/2017');
+INSERT INTO Table_lo_xien_3(Username_, Number_1, Number_2, Number_3, Point_, Date_)
+VALUES('tribm', 26, 27, 28, 30, '03/07/2017');
+INSERT INTO Table_lo_xien_3(Username_, Number_1, Number_2, Number_3, Point_, Date_)
+VALUES('chinhnd', 27, 28, 29, 40, '03/07/2017');
+
+INSERT INTO Table_lo_xien_4(Username_, Number_1, Number_2, Number_3, Number_4, Point_, Date_)
+VALUES('tungnt', 24, 25, 26, 27, 10, '03/07/2017');
+INSERT INTO Table_lo_xien_4(Username_, Number_1, Number_2, Number_3, Number_4, Point_, Date_)
+VALUES('truongtn', 25, 26, 27, 28, 20, '03/07/2017');
+INSERT INTO Table_lo_xien_4(Username_, Number_1, Number_2, Number_3, Number_4, Point_, Date_)
+VALUES('tribm', 26, 27, 28, 29, 30, '03/07/2017');
+INSERT INTO Table_lo_xien_4(Username_, Number_1, Number_2, Number_3, Number_4, Point_, Date_)
+VALUES('chinhnd', 27, 28, 29, 30, 40, '03/07/2017');
