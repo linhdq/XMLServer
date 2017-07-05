@@ -185,12 +185,32 @@ public class DBContext {
         return true;
 	}
 	
+	public void updateUser(User model){
+		String sql ="UPDATE Users SET Password_ = '"+model.getPassword()+"', Fullname_ = '"+model.getFullName()
+				+"', PhoneNumber_ = '"+model.getPhoneNumber()+"' WHERE "
+				+"Username_ = '"+model.getUsername()+"'";
+		try {
+			PreparedStatement preStatement = conn.prepareStatement(sql);
+			preStatement.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public boolean deleteUser(String username){
+		deleteDeByUsername(username);
+		deleteBaCangByUsername(username);
+		deleteLoByUsername(username);
+		deleteLoXien2ByUsername(username);
+		deleteLoXien3ByUsername(username);
+		deleteLoXien4ByUsername(username);
 		String sql ="DELETE FROM Users WHERE Username_='"+username+"'";
 		Statement statement;
 		try {
 			statement = conn.createStatement();
-			return statement.execute(sql);
+			statement.execute(sql);
+			return true;
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -270,6 +290,20 @@ public class DBContext {
 		return listData;
 	}
 	
+	public boolean deleteDeByUsername(String username){
+		
+		String sql ="DELETE FROM Table_De WHERE Username_='"+username+"'";
+		Statement statement;
+		try {
+			statement = conn.createStatement();
+			return statement.execute(sql);
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return false;
+		}
+	}
+	
 	/**
 	 * Ba Cang table
 	 * */
@@ -295,6 +329,20 @@ public class DBContext {
 			e.printStackTrace();
 		}
 		return listData;
+	}
+	
+	public boolean deleteBaCangByUsername(String username){
+		
+		String sql ="DELETE FROM Table_ba_cang WHERE Username_='"+username+"'";
+		Statement statement;
+		try {
+			statement = conn.createStatement();
+			return statement.execute(sql);
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return false;
+		}
 	}
 	
 	public List<BaCangModel> getAllDataOfBaCangByDate(String date){
@@ -369,6 +417,20 @@ public class DBContext {
 		return listData;
 	}
 	
+	public boolean deleteLoByUsername(String username){
+		
+		String sql ="DELETE FROM Table_lo WHERE Username_='"+username+"'";
+		Statement statement;
+		try {
+			statement = conn.createStatement();
+			return statement.execute(sql);
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return false;
+		}
+	}
+	
 	public List<LoModel> getAllDataOfLoByDate(String date){
 		String sql = "SELECT * FROM Table_lo WHERE Date_ = '"+date+"'";
 		List<LoModel> listData = new ArrayList();
@@ -440,6 +502,20 @@ public class DBContext {
 			e.printStackTrace();
 		}
 		return listData;
+	}
+	
+	public boolean deleteLoXien2ByUsername(String username){
+		
+		String sql ="DELETE FROM Table_lo_xien_2 WHERE Username_='"+username+"'";
+		Statement statement;
+		try {
+			statement = conn.createStatement();
+			return statement.execute(sql);
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return false;
+		}
 	}
 	
 	public List<LoXien2Model> getAllDataOfLoXien2ByDate(String date){
@@ -516,6 +592,20 @@ public class DBContext {
 			e.printStackTrace();
 		}
 		return listData;
+	}
+	
+	public boolean deleteLoXien3ByUsername(String username){
+		
+		String sql ="DELETE FROM Table_lo_xien_3 WHERE Username_='"+username+"'";
+		Statement statement;
+		try {
+			statement = conn.createStatement();
+			return statement.execute(sql);
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return false;
+		}
 	}
 	
 	public List<LoXien3Model> getAllDataOfLoXien3ByDate(String date){
@@ -595,6 +685,20 @@ public class DBContext {
 			e.printStackTrace();
 		}
 		return listData;
+	}
+	
+	public boolean deleteLoXien4ByUsername(String username){
+		
+		String sql ="DELETE FROM Table_lo_xien_4 WHERE Username_='"+username+"'";
+		Statement statement;
+		try {
+			statement = conn.createStatement();
+			return statement.execute(sql);
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return false;
+		}
 	}
 	
 	public List<LoXien4Model> getAllDataOfLoXien4ByDate(String date){

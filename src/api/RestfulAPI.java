@@ -19,6 +19,7 @@ import restful_api_model.LoginModel;
 import restful_api_model.LoginResponseModel;
 import restful_api_model.RequestDataModel;
 import restful_api_model.ResponseModel;
+import restful_api_model.UpdateUserMoel;
 import xml_util.ConvertObjectToXML;
 import database.DBContext;
 import model.BaCangModel;
@@ -50,7 +51,6 @@ public class RestfulAPI {
 		User user = null;
 		if(dbContext.openConnection()){
 			user = dbContext.checkLogin(model.getUsername(), model.getPassword());
-//			dbContext.closeConnection();
 		}
 		String result = "";
 		if(user!=null){
@@ -80,7 +80,6 @@ public class RestfulAPI {
 				responseModel.setMessage("Bạn không có quyền truy cập chức năng này!");
 				xml = ConvertObjectToXML.convertResponseModelToXML(responseModel);
 			}
-//			dbContext.closeConnection();
 		}
 		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
@@ -103,7 +102,6 @@ public class RestfulAPI {
 				responseModel.setMessage("Bạn không có quyền truy cập chức năng này!");
 				xml = ConvertObjectToXML.convertResponseModelToXML(responseModel);
 			}
-//			dbContext.closeConnection();
 		}
 		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
@@ -126,7 +124,6 @@ public class RestfulAPI {
 					responseModel.setMessage("Tạo tài khoản thành công!");
 				}
 			}
-//			dbContext.closeConnection();
 		}
 		String xml = ConvertObjectToXML.convertResponseModelToXML(responseModel);
 		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
@@ -150,7 +147,6 @@ public class RestfulAPI {
 					responseModel.setMessage("Tạo tài khoản thành công!");
 				}
 			}
-//			dbContext.closeConnection();
 		}
 		String xml = ConvertObjectToXML.convertResponseModelToXML(responseModel);
 		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
@@ -182,7 +178,6 @@ public class RestfulAPI {
 				responseModel.setStatus(false);
 				responseModel.setMessage("Bạn không có quyền xóa tài khoản này!");
 			}
-//			dbContext.closeConnection();
 		}
 		String xml = ConvertObjectToXML.convertResponseModelToXML(responseModel);
 		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
@@ -214,7 +209,27 @@ public class RestfulAPI {
 				responseModel.setStatus(false);
 				responseModel.setMessage("Bạn không có quyền xóa tài khoản này!");
 			}
-//			dbContext.closeConnection();
+		}
+		String xml = ConvertObjectToXML.convertResponseModelToXML(responseModel);
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
+	}
+	
+	@POST
+	@Path("/update/user")
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response updateUser(UpdateUserMoel model) {
+		//check login data in database
+		ResponseModel responseModel =new ResponseModel();
+		if(dbContext.openConnection()){
+			User user = dbContext.checkUsernameIsExists(model.getUsername());
+			if(user!=null){
+				dbContext.updateUser(new User(model.getUsername(), model.getPassword(), model.getFullName(), model.getPhoneNumber(), 0));
+				responseModel.setStatus(true);
+				responseModel.setMessage("Cập nhật thành công!");
+			}else{
+				responseModel.setStatus(false);
+				responseModel.setMessage("Cập nhật không thành công!");
+			}
 		}
 		String xml = ConvertObjectToXML.convertResponseModelToXML(responseModel);
 		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
@@ -237,7 +252,6 @@ public class RestfulAPI {
 				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
 				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
 			}
-//			dbContext.closeConnection();
 		}
 		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
@@ -259,7 +273,6 @@ public class RestfulAPI {
 				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
 				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
 			}
-//			dbContext.closeConnection();
 		}
 		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
@@ -281,7 +294,6 @@ public class RestfulAPI {
 				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
 				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
 			}
-//			dbContext.closeConnection();
 		}
 		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
@@ -303,7 +315,6 @@ public class RestfulAPI {
 				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
 				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
 			}
-//			dbContext.closeConnection();
 		}
 		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
@@ -325,7 +336,6 @@ public class RestfulAPI {
 				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
 				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
 			}
-//			dbContext.closeConnection();
 		}
 		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
@@ -347,7 +357,6 @@ public class RestfulAPI {
 				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
 				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
 			}
-//			dbContext.closeConnection();
 		}
 		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
@@ -369,7 +378,6 @@ public class RestfulAPI {
 				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
 				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
 			}
-//			dbContext.closeConnection();
 		}
 		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
@@ -391,7 +399,6 @@ public class RestfulAPI {
 				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
 				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
 			}
-//			dbContext.closeConnection();
 		}
 		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
@@ -413,7 +420,6 @@ public class RestfulAPI {
 				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
 				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
 			}
-//			dbContext.closeConnection();
 		}
 		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
@@ -456,7 +462,6 @@ public class RestfulAPI {
 				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
 				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
 			}
-//			dbContext.closeConnection();
 		}
 		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
@@ -478,7 +483,6 @@ public class RestfulAPI {
 				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
 				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
 			}
-//			dbContext.closeConnection();
 		}
 		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
@@ -500,7 +504,6 @@ public class RestfulAPI {
 				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
 				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
 			}
-//			dbContext.closeConnection();
 		}
 		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
@@ -522,7 +525,6 @@ public class RestfulAPI {
 				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
 				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
 			}
-//			dbContext.closeConnection();
 		}
 		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
@@ -544,7 +546,6 @@ public class RestfulAPI {
 				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
 				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
 			}
-//			dbContext.closeConnection();
 		}
 		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
@@ -566,7 +567,6 @@ public class RestfulAPI {
 				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
 				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
 			}
-//			dbContext.closeConnection();
 		}
 		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
@@ -588,7 +588,6 @@ public class RestfulAPI {
 				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
 				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
 			}
-//			dbContext.closeConnection();
 		}
 		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
@@ -610,7 +609,6 @@ public class RestfulAPI {
 				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
 				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
 			}
-//			dbContext.closeConnection();
 		}
 		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}
