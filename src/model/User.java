@@ -13,13 +13,14 @@ public class User{
 	private String phoneNumber;
 	private int role;//0: super admin; 1: admin; 2: client
 	private boolean success;
+	private String createdBy;
 	
 	public User(){
 		
 	}
 	
 	public User(String username, String password, String fullName,
-			String phoneNumber, int role) {
+			String phoneNumber, int role, String createdBy) {
 		super();
 		this.username = username;
 		this.password = password;
@@ -27,6 +28,7 @@ public class User{
 		this.phoneNumber = phoneNumber;
 		this.role = role;
 		this.success=false;
+		this.createdBy=createdBy;
 	}
 	public String getUsername() {
 		return username;
@@ -64,5 +66,13 @@ public class User{
 
 	public void setSuccess(boolean success) {
 		this.success = success;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 }

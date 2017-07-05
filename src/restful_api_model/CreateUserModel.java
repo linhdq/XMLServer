@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name="NewUser")
 public class CreateUserModel implements Serializable{
+	private String requestByUser;
 	private String username;
 	private String password;
 	private String fullName;
@@ -16,14 +17,24 @@ public class CreateUserModel implements Serializable{
 		
 	}
 	
-	public CreateUserModel(String username, String password, String fullName,
+	public CreateUserModel(String requestByUser,String username, String password, String fullName,
 			String phoneNumber) {
 		super();
+		this.requestByUser = requestByUser;
 		this.username = username;
 		this.password = password;
 		this.fullName = fullName;
 		this.phoneNumber = phoneNumber;
 	}
+	
+	public String getRequestByUser() {
+		return requestByUser;
+	}
+	@XmlElement(name="requestByUser")
+	public void setRequestByUser(String requestByUser) {
+		this.requestByUser = requestByUser;
+	}
+
 	public String getUsername() {
 		return username;
 	}

@@ -56,7 +56,7 @@ public class RestfulAPI {
 		if(user!=null){
 			user.setSuccess(true);
 		}else{
-			user = new User("", "", "", "", -1);
+			user = new User("", "", "", "", -1,"");
 		}
 		String xml = ConvertObjectToXML.convertUserModelToXml(user);
 		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
@@ -73,7 +73,7 @@ public class RestfulAPI {
 		if(dbContext.openConnection()){
 			User user = dbContext.checkLogin(model.getUsername(), model.getPassword());
 			if(user!=null &&user.getRole()==0){
-				listUser.addAll(dbContext.getAllAdmins());
+				listUser.addAll(dbContext.getAllAdmins(model.getUsername()));
 				xml = ConvertObjectToXML.convertListUserModelToXml(listUser);
 			}else{
 				responseModel.setStatus(false);
@@ -95,7 +95,7 @@ public class RestfulAPI {
 		if(dbContext.openConnection()){
 			User user = dbContext.checkLogin(model.getUsername(), model.getPassword());
 			if(user!=null &&user.getRole()==1){
-				listUser.addAll(dbContext.getAllClients());
+				listUser.addAll(dbContext.getAllClients(model.getUsername()));
 				xml = ConvertObjectToXML.convertListUserModelToXml(listUser);
 			}else{
 				responseModel.setStatus(false);
@@ -114,11 +114,12 @@ public class RestfulAPI {
 		ResponseModel responseModel =new ResponseModel();
 		if(dbContext.openConnection()){
 			User user = dbContext.checkUsernameIsExists(model.getUsername());
+			User superAdmin = dbContext.getSuperAdmin();
 			if(user!=null){
 				responseModel.setStatus(false);
 				responseModel.setMessage("Tên đăng nhập này đã tồn tại!");
 			}else{
-				user=new User(model.getUsername(), model.getPassword(), model.getFullName(), model.getPhoneNumber(), 1);
+				user=new User(model.getUsername(), model.getPassword(), model.getFullName(), model.getPhoneNumber(), 1, superAdmin.getUsername());
 				if(dbContext.insertUser(user)){
 					responseModel.setStatus(true);
 					responseModel.setMessage("Tạo tài khoản thành công!");
@@ -141,7 +142,7 @@ public class RestfulAPI {
 				responseModel.setStatus(false);
 				responseModel.setMessage("Tên đăng nhập này đã tồn tại!");
 			}else{
-				user=new User(model.getUsername(), model.getPassword(), model.getFullName(), model.getPhoneNumber(), 2);
+				user=new User(model.getUsername(), model.getPassword(), model.getFullName(), model.getPhoneNumber(), 2, model.getRequestByUser());
 				if(dbContext.insertUser(user)){
 					responseModel.setStatus(true);
 					responseModel.setMessage("Tạo tài khoản thành công!");
@@ -192,7 +193,7 @@ public class RestfulAPI {
 		if(dbContext.openConnection()){
 			User userRequest = dbContext.checkUsernameIsExists(model.getUsernameRequest());
 			if(userRequest!=null && userRequest.getRole()==1){
-				User userDelete = dbContext.checkUsernameIsExists(model.getUsernameDelete());
+				User userDelete = dbContext.checkUserIsExists(model.getUsernameDelete(), model.getUsernameRequest());
 				if(userDelete!=null && userDelete.getRole()==2){
 					if(dbContext.deleteUser(model.getUsernameDelete())){
 						responseModel.setStatus(true);
@@ -223,7 +224,7 @@ public class RestfulAPI {
 		if(dbContext.openConnection()){
 			User user = dbContext.checkUsernameIsExists(model.getUsername());
 			if(user!=null){
-				dbContext.updateUser(new User(model.getUsername(), model.getPassword(), model.getFullName(), model.getPhoneNumber(), 0));
+				dbContext.updateUser(new User(model.getUsername(), model.getPassword(), model.getFullName(), model.getPhoneNumber(), 0, user.getCreatedBy()));
 				responseModel.setStatus(true);
 				responseModel.setMessage("Cập nhật thành công!");
 			}else{

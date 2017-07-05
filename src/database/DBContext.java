@@ -48,7 +48,6 @@ public class DBContext {
 	public boolean openConnection(){
 		try {
 			conn = DriverManager.getConnection(jdbcUrl);
-			System.out.println("Connected!");
 			return true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -86,7 +85,8 @@ public class DBContext {
 				String fullname = result.getString(3);
 				String phone = result.getString(4);
 				int role = result.getInt(5);
-				user = new User(uname, pass, fullname, phone, role);
+				String createdBy = result.getString(6);
+				user = new User(uname, pass, fullname, phone, role, createdBy);
 				break;
 			}
 		} catch (SQLException e) {
@@ -110,7 +110,8 @@ public class DBContext {
 				String fullname = result.getString(3);
 				String phone = result.getString(4);
 				int role = result.getInt(5);
-				user = new User(uname, pass, fullname, phone, role);
+				String createdBy = result.getString(6);
+				user = new User(uname, pass, fullname, phone, role, createdBy);
 				break;
 			}
 		} catch (SQLException e) {
@@ -120,8 +121,57 @@ public class DBContext {
 		return user;
 	}
 	
-	public List<User> getAllAdmins(){
-		String sql = "SELECT * FROM Users WHERE Role_ = 1";
+	public User checkUserIsExists(String username, String createdBy){
+		String sql = "SELECT * FROM Users WHERE Username_= '"+username+"' AND CreatedBy_= '"+createdBy+"'";
+		Statement statement;
+		ResultSet result;
+		User user = null;
+		try {
+			statement = conn.createStatement();
+			result = statement.executeQuery(sql);
+			while(result.next()){
+				String uname = result.getString(1);
+				String pass = result.getString(2);
+				String fullname = result.getString(3);
+				String phone = result.getString(4);
+				int role = result.getInt(5);
+				user = new User(uname, pass, fullname, phone, role, createdBy);
+				break;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	public User getSuperAdmin(){
+		String sql = "SELECT * FROM Users WHERE Role_= 0";
+		Statement statement;
+		ResultSet result;
+		User user = null;
+		try {
+			statement = conn.createStatement();
+			result = statement.executeQuery(sql);
+			while(result.next()){
+				String uname = result.getString(1);
+				String pass = result.getString(2);
+				String fullname = result.getString(3);
+				String phone = result.getString(4);
+				int role = result.getInt(5);
+				String createdBy = result.getString(6);
+				user = new User(uname, pass, fullname, phone, role, createdBy);
+				break;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	public List<User> getAllAdmins(String username){
+		String sql = "SELECT * FROM Users WHERE Role_ = 1 AND CreatedBy_ ='"+username+"'";
 		List<User> listUsers = new ArrayList();
 		Statement statement;
 		ResultSet result;
@@ -134,7 +184,7 @@ public class DBContext {
 				String fullname = result.getString(3);
 				String phone = result.getString(4);
 				int role = result.getInt(5);
-				User user = new User(uname, pass, fullname, phone, role);
+				User user = new User(uname, pass, fullname, phone, role, username);
 				listUsers.add(user);
 			}
 		} catch (SQLException e) {
@@ -144,8 +194,8 @@ public class DBContext {
 		return listUsers;
 	}
 	
-	public List<User> getAllClients(){
-		String sql = "SELECT * FROM Users WHERE Role_ = 2";
+	public List<User> getAllClients(String username){
+		String sql = "SELECT * FROM Users WHERE Role_ = 2 AND CreatedBy_ ='"+username+"'";
 		List<User> listUsers = new ArrayList();
 		Statement statement;
 		ResultSet result;
@@ -158,7 +208,7 @@ public class DBContext {
 				String fullname = result.getString(3);
 				String phone = result.getString(4);
 				int role = result.getInt(5);
-				User user = new User(uname, pass, fullname, phone, role);
+				User user = new User(uname, pass, fullname, phone, role, username);
 				listUsers.add(user);
 			}
 		} catch (SQLException e) {
@@ -171,12 +221,13 @@ public class DBContext {
 	public boolean insertUser(User model){
 		PreparedStatement preStmt = null;
         try {
-            preStmt = conn.prepareStatement("INSERT INTO Users VALUES(?,?,?,?,?)");
+            preStmt = conn.prepareStatement("INSERT INTO Users VALUES(?,?,?,?,?,?)");
             preStmt.setString(1, model.getUsername());
             preStmt.setString(2, model.getPassword());
             preStmt.setString(3, model.getFullName());
             preStmt.setString(4, model.getPhoneNumber());
             preStmt.setInt(5, model.getRole());
+            preStmt.setString(6, model.getCreatedBy());
             preStmt.execute();
         } catch (Exception e) {
             System.out.println(e);
@@ -205,7 +256,33 @@ public class DBContext {
 		deleteLoXien2ByUsername(username);
 		deleteLoXien3ByUsername(username);
 		deleteLoXien4ByUsername(username);
+		deleteClientsByCreatedUser(username);
 		String sql ="DELETE FROM Users WHERE Username_='"+username+"'";
+		Statement statement;
+		try {
+			statement = conn.createStatement();
+			statement.execute(sql);
+			return true;
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean deleteClientsByCreatedUser(String createdBy){
+		List<User> list = getAllClients(createdBy);
+		if(list!=null){
+			for(User u: list){
+				deleteDeByUsername(u.getUsername());
+				deleteBaCangByUsername(u.getUsername());
+				deleteLoByUsername(u.getUsername());
+				deleteLoXien2ByUsername(u.getUsername());
+				deleteLoXien3ByUsername(u.getUsername());
+				deleteLoXien4ByUsername(u.getUsername());
+			}
+		}
+		String sql ="DELETE FROM Users WHERE Role_= 2 AND CreatedBy_ = '"+createdBy+"'";
 		Statement statement;
 		try {
 			statement = conn.createStatement();
