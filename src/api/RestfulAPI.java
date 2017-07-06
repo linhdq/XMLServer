@@ -15,10 +15,12 @@ import com.google.gson.Gson;
 
 import restful_api_model.CreateUserModel;
 import restful_api_model.DeleteRequest;
+import restful_api_model.ListDeModels;
 import restful_api_model.LoginModel;
 import restful_api_model.LoginResponseModel;
 import restful_api_model.RequestDataModel;
 import restful_api_model.ResponseModel;
+import restful_api_model.UpdateListDeModels;
 import restful_api_model.UpdatePriceModel;
 import restful_api_model.UpdateUserMoel;
 import xml_util.ConvertObjectToXML;
@@ -622,7 +624,12 @@ public class RestfulAPI {
 		PriceModel priceModel =null;
 		String xml ="";
 		if(dbContext.openConnection()){
-			priceModel = dbContext.getPriceByUsername(model.getUsername());
+			User user = dbContext.checkUsernameIsExists(model.getUsername());
+			if(user.getRole()==1){
+				priceModel = dbContext.getPriceByUsername(model.getUsername());
+			}else if(user.getRole()==2){
+				priceModel = dbContext.getPriceByUsername(user.getCreatedBy());
+			}
 			if(priceModel!=null){
 				xml = ConvertObjectToXML.convertPriceModelToXML(priceModel);
 			}else{
@@ -646,6 +653,31 @@ public class RestfulAPI {
 			ResponseModel resModel = new ResponseModel();
 			resModel.setStatus(true);
 			resModel.setMessage("Cập nhật giá thành công!");
+			xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
+		}
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
+	}
+	
+	@POST
+	@Path("/update/de")
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response updateDe(ListDeModels model) {
+		String xml ="";
+		if(dbContext.openConnection()){
+			if(model!=null && model.getListDe()!=null){
+				System.out.println(model.getListDe().size());
+				if(model.getListDe().size()!=0){
+					DeModel d = model.getListDe().get(0);
+					dbContext.deleteDeByUsernameAndDate(d.getUsername(), d.getDate());
+				}
+				
+				for(DeModel d: model.getListDe()){
+					dbContext.insertDeModel(d);
+				}
+			}
+			ResponseModel resModel = new ResponseModel();
+			resModel.setStatus(true);
+			resModel.setMessage("Cập nhật đề thành công!");
 			xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
 		}
 		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();

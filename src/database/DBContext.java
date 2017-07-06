@@ -383,6 +383,36 @@ public class DBContext {
 		}
 	}
 	
+	public boolean deleteDeByUsernameAndDate(String username, String date){
+		
+		String sql ="DELETE FROM Table_De WHERE Username_='"+username+"' AND Date_ ='"+date+"'";
+		Statement statement;
+		try {
+			statement = conn.createStatement();
+			return statement.execute(sql);
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean insertDeModel(DeModel model){
+		PreparedStatement preStmt = null;
+        try {
+            preStmt = conn.prepareStatement("INSERT INTO Table_De VALUES(?,?,?,?)");
+            preStmt.setString(1, model.getUsername());
+            preStmt.setInt(2, model.getNumber());
+            preStmt.setInt(3, model.getPrice());
+            preStmt.setString(4, model.getDate());
+            preStmt.execute();
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+        return true;
+	}
+	
 	/**
 	 * Ba Cang table
 	 * */

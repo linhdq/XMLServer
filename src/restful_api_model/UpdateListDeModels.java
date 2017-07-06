@@ -12,8 +12,7 @@ import model.DeModel;
 import model.User;
 
 @XmlRootElement(name="list_de")
-@XmlAccessorType(XmlAccessType.FIELD)
-public class ListDeModels implements Serializable{
+public class UpdateListDeModels implements Serializable{
 	@XmlElement(name="de")
 	private List<DeModel> listDe;
 

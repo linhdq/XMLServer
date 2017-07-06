@@ -1,12 +1,14 @@
 package model;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name="de")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class DeModel{
+public class DeModel implements Serializable{
 	private String username;
 	private int number;
 	private int price;
