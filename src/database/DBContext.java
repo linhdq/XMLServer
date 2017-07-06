@@ -10,12 +10,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import restful_api_model.UpdatePriceModel;
 import model.BaCangModel;
 import model.DeModel;
 import model.LoModel;
 import model.LoXien2Model;
 import model.LoXien3Model;
 import model.LoXien4Model;
+import model.PriceModel;
 import model.User;
 
 public class DBContext {
@@ -827,5 +829,76 @@ public class DBContext {
 			e.printStackTrace();
 		}
 		return listData;
+	}
+	
+	/**
+	 * Table Price
+	 * */
+	
+	public boolean insertPrice(UpdatePriceModel model){
+		PreparedStatement preStmt = null;
+        try {
+            preStmt = conn.prepareStatement("INSERT INTO Table_price VALUES(?,?,?,?,?,?,?,?,?,?,?)");
+            preStmt.setString(1, model.getUsername());
+            preStmt.setInt(2, model.getDePrice());
+            preStmt.setInt(3, model.getBaCangPrice());
+            preStmt.setInt(4, model.getLoNhanPrice());
+            preStmt.setInt(5, model.getLoTraPrice());
+            preStmt.setInt(6, model.getLoXien2NhanPrice());
+            preStmt.setInt(7, model.getLoXien2TraPrice());
+            preStmt.setInt(8, model.getLoXien3NhanPrice());
+            preStmt.setInt(9, model.getLoXien3TraPrice());
+            preStmt.setInt(10, model.getLoXien4NhanPrice());
+            preStmt.setInt(11, model.getLoXien4TraPrice());
+            preStmt.execute();
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+        return true;
+	}
+	
+	public boolean deletePriceByUsername(String username){
+		String sql ="DELETE FROM Table_price WHERE Username_='"+username+"'";
+		Statement statement;
+		try {
+			statement = conn.createStatement();
+			statement.execute(sql);
+			return true;
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return false;
+		}
+	}
+	
+	public PriceModel getPriceByUsername(String username){
+		String sql = "SELECT * FROM Table_price WHERE Username_= '"+username+"'";
+		Statement statement;
+		ResultSet result;
+		PriceModel model = null;
+		try {
+			statement = conn.createStatement();
+			result = statement.executeQuery(sql);
+			while(result.next()){
+				String uname = result.getString(1);
+				int dePrice = result.getInt(2);
+				int bacangPrice = result.getInt(3);
+				int loNhanPrice = result.getInt(4);
+				int loTraPrice = result.getInt(5);
+				int loXien2NhanPrice = result.getInt(6);
+				int loXien2TraPrice = result.getInt(7);
+				int loXien3NhanPrice = result.getInt(8);
+				int loXien3TraPrice = result.getInt(9);
+				int loXien4NhanPrice = result.getInt(10);
+				int loXien4TraPrice = result.getInt(11);
+				model = new PriceModel(dePrice, bacangPrice, loNhanPrice, loTraPrice, loXien2NhanPrice, loXien2TraPrice, loXien3NhanPrice, loXien3TraPrice, loXien4NhanPrice, loXien4TraPrice);
+				break;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return model;
 	}
 }

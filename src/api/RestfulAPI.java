@@ -19,6 +19,7 @@ import restful_api_model.LoginModel;
 import restful_api_model.LoginResponseModel;
 import restful_api_model.RequestDataModel;
 import restful_api_model.ResponseModel;
+import restful_api_model.UpdatePriceModel;
 import restful_api_model.UpdateUserMoel;
 import xml_util.ConvertObjectToXML;
 import database.DBContext;
@@ -28,6 +29,7 @@ import model.LoModel;
 import model.LoXien2Model;
 import model.LoXien3Model;
 import model.LoXien4Model;
+import model.PriceModel;
 import model.User;
 
 @Path("/api")
@@ -610,6 +612,41 @@ public class RestfulAPI {
 				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
 				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
 			}
+		}
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
+	}
+	@POST
+	@Path("/get/price")
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response getPrice(RequestDataModel model) {
+		PriceModel priceModel =null;
+		String xml ="";
+		if(dbContext.openConnection()){
+			priceModel = dbContext.getPriceByUsername(model.getUsername());
+			if(priceModel!=null){
+				xml = ConvertObjectToXML.convertPriceModelToXML(priceModel);
+			}else{
+				ResponseModel resModel = new ResponseModel();
+				resModel.setStatus(false);
+				resModel.setMessage("Bạn không có quyền truy cập chức năng này!");
+				xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
+			}
+		}
+		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
+	}
+	
+	@POST
+	@Path("/update/price")
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response updatePrice(UpdatePriceModel model) {
+		String xml ="";
+		if(dbContext.openConnection()){
+			dbContext.deletePriceByUsername(model.getUsername());
+			dbContext.insertPrice(model);
+			ResponseModel resModel = new ResponseModel();
+			resModel.setStatus(true);
+			resModel.setMessage("Cập nhật giá thành công!");
+			xml = ConvertObjectToXML.convertResponseModelToXML(resModel);
 		}
 		return Response.status(200).entity(xml).type(MediaType.APPLICATION_XML).build();
 	}

@@ -21,6 +21,7 @@ import model.LoModel;
 import model.LoXien2Model;
 import model.LoXien3Model;
 import model.LoXien4Model;
+import model.PriceModel;
 import model.User;
 
 public class ConvertObjectToXML {
@@ -60,6 +61,21 @@ public class ConvertObjectToXML {
 	public static String convertResponseModelToXML(ResponseModel model){
 		try {
 			JAXBContext contectObj = JAXBContext.newInstance(ResponseModel.class);
+			Marshaller marshaller = contectObj.createMarshaller();
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			StringWriter sw =new StringWriter();
+			marshaller.marshal(model, sw);
+			return sw.toString();
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "{}";
+	}
+	
+	public static String convertPriceModelToXML(PriceModel model){
+		try {
+			JAXBContext contectObj = JAXBContext.newInstance(PriceModel.class);
 			Marshaller marshaller = contectObj.createMarshaller();
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			StringWriter sw =new StringWriter();
